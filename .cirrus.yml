@@ -1,15 +1,47 @@
 ---
 
-matrix_experiment_task:
+nine_gag_page_feeder_task:
 
   container:
     image: python:3.10
 
-  name: Execute a set of similar tasks
+  name: Page crawler
   only_if: $CIRRUS_BRANCH =~ 'master'
+
+  - environment:
+      ENV_NAME: cirrusci
+      GIT_SSH_PRIV_KEY: ENCRYPTED[!d28c304d8f0f92eb1febb673dc51d602398f9bae77af36a38d42d145c8b28512f4fba2820444dbd5c07c88cc90353a54!]
+      GIT_REMOTE: ENCRYPTED[!cdb3611d249b885d9dc09fa87dd1b4b1c58dbae766f1a9ac856be0fb31207e7c3de33b31337f46f58f1f3e4291fcd7fa!]
+      MONGODB_URI: ENCRYPTED[!18441f9452e24c9a13e4f55b09e0e88673938e102c58b09c4367295eccb8a53d4ea28f2ee34b50622d1ea474884c002c!]
+      RMQ_SERVER_URI: ENCRYPTED[!7c2e19d4164749f13a462595b05f571b280df56aeb6852181265fd416277b5cf0d4d5a5cb3d3934bb79730a247adb1f0!]
+
+  env_printout_script:
+    - echo "AGENT_ID=${AGENT_ID}"
+    - echo "${GIT_SSH_PRIV_KEY}" > id_ed25519_git
+    - chmod 400 id_ed25519_git
+    - mkdir -pv ~/.ssh
+    - ssh-keyscan github.com >> ~/.ssh/known_hosts
+    - eval $(ssh-agent)
+    - ssh-add id_ed25519_git
+    - mkdir "repo"
+    - git clone "${GIT_REMOTE}" "repo"
+    - cd "repo"
+    - pip install -r requirements.txt
+    - python3 src/9gag_page_feeder.py
+
+
+processing_agents_matrix_task:
+
+  container:
+    image: python:3.10
+
+  name: Processing agents
+  only_if: $CIRRUS_BRANCH =~ 'master'
+
   matrix:
     - environment:
         AGENT_ID: cirrusci_001
+        ENV_NAME: cirrusci
         GIT_SSH_PRIV_KEY: ENCRYPTED[!d28c304d8f0f92eb1febb673dc51d602398f9bae77af36a38d42d145c8b28512f4fba2820444dbd5c07c88cc90353a54!]
         GIT_REMOTE: ENCRYPTED[!cdb3611d249b885d9dc09fa87dd1b4b1c58dbae766f1a9ac856be0fb31207e7c3de33b31337f46f58f1f3e4291fcd7fa!]
         MONGODB_URI: ENCRYPTED[!18441f9452e24c9a13e4f55b09e0e88673938e102c58b09c4367295eccb8a53d4ea28f2ee34b50622d1ea474884c002c!]
@@ -17,6 +49,7 @@ matrix_experiment_task:
 
     - environment:
         AGENT_ID: cirrusci_002
+        ENV_NAME: cirrusci
         GIT_SSH_PRIV_KEY: ENCRYPTED[!d28c304d8f0f92eb1febb673dc51d602398f9bae77af36a38d42d145c8b28512f4fba2820444dbd5c07c88cc90353a54!]
         GIT_REMOTE: ENCRYPTED[!cdb3611d249b885d9dc09fa87dd1b4b1c58dbae766f1a9ac856be0fb31207e7c3de33b31337f46f58f1f3e4291fcd7fa!]
         MONGODB_URI: ENCRYPTED[!18441f9452e24c9a13e4f55b09e0e88673938e102c58b09c4367295eccb8a53d4ea28f2ee34b50622d1ea474884c002c!]
@@ -24,6 +57,7 @@ matrix_experiment_task:
 
     - environment:
         AGENT_ID: cirrusci_003
+        ENV_NAME: cirrusci
         GIT_SSH_PRIV_KEY: ENCRYPTED[!d28c304d8f0f92eb1febb673dc51d602398f9bae77af36a38d42d145c8b28512f4fba2820444dbd5c07c88cc90353a54!]
         GIT_REMOTE: ENCRYPTED[!cdb3611d249b885d9dc09fa87dd1b4b1c58dbae766f1a9ac856be0fb31207e7c3de33b31337f46f58f1f3e4291fcd7fa!]
         MONGODB_URI: ENCRYPTED[!18441f9452e24c9a13e4f55b09e0e88673938e102c58b09c4367295eccb8a53d4ea28f2ee34b50622d1ea474884c002c!]
