@@ -8,7 +8,7 @@ nine_gag_page_feeder_task:
   name: Page crawler
   only_if: $CIRRUS_BRANCH =~ 'master'
 
-  - environment:
+  environment:
       ENV_NAME: cirrusci
       GIT_SSH_PRIV_KEY: ENCRYPTED[!d28c304d8f0f92eb1febb673dc51d602398f9bae77af36a38d42d145c8b28512f4fba2820444dbd5c07c88cc90353a54!]
       GIT_REMOTE: ENCRYPTED[!cdb3611d249b885d9dc09fa87dd1b4b1c58dbae766f1a9ac856be0fb31207e7c3de33b31337f46f58f1f3e4291fcd7fa!]
