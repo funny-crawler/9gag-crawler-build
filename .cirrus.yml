@@ -27,6 +27,7 @@ matrix_experiment_task:
     - echo "AGENT_ID=${AGENT_ID}"
     - echo "${GIT_SSH_PRIV_KEY}" > id_ed25519_git
     - chmod 400 id_ed25519_git
+    - ssh-keyscan github.com >> ~/.ssh/known_hosts
     - eval $(ssh-agent)
     - ssh-add id_ed25519_git
     - mkdir "repo"
