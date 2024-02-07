@@ -1,10 +1,10 @@
 ---
 
+container:
+  image: python:3.10
+
+
 nine_gag_page_feeder_task:
-
-  container:
-    image: python:3.10
-
   name: Page crawler
   only_if: $CIRRUS_BRANCH =~ 'master'
 
@@ -31,10 +31,6 @@ nine_gag_page_feeder_task:
 
 
 processing_agents_matrix_task:
-
-  container:
-    image: python:3.10
-
   name: Processing agents
   only_if: $CIRRUS_BRANCH =~ 'master'
 
