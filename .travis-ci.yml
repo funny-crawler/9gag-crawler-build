@@ -1,0 +1,47 @@
+---
+
+language: python
+python:
+  - "3.10"
+
+jobs:
+  include:
+    - stage: nine_gag_page_feeder
+      env:
+        ENV_NAME: travisci
+      script:
+        - pip install -r requirements.txt
+        - python3 src/9gag_page_feeder.py
+
+    - stage: processing_agent_001
+      env:
+        ENV_NAME: travisci
+        AGENT_ID: travisci_001
+      script:
+        - pip install -r requirements.txt
+        - python3 src/9gag_post_download_agent.py
+
+    - stage: processing_agent_002
+      env: 
+        ENV_NAME: travisci
+        AGENT_ID: travisci_002
+      script:
+        - pip install -r requirements.txt
+        - python3 src/9gag_post_download_agent.py
+
+    - stage: processing_agent_003
+      env:
+        ENV_NAME: travisci
+        AGENT_ID: travisci_003
+      script:
+        - pip install -r requirements.txt
+        - python3 src/9gag_post_download_agent.py
+
+stages:
+  - name: scheduled_crawl
+    if: type = cron
+
+  - name: processing_agents_matrix
+    if: type = push
+
+...
